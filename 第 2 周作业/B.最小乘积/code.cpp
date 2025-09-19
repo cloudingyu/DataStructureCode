@@ -1,21 +1,21 @@
 #include <iostream>
 using namespace std;
 
-int a, b, x, y, n;
+long long a, b, x, y, n;
+
+long long da, db;
 
 int main()
 {
     cin >> a >> b >> x >> y >> n;
 
-    int min_product = INT_MAX;
+    da = min(n, a - x);
+    db = min(n, b - y);
 
-    for (int i = 0; i <= n; i++)
-    {
-        int j = n - i;
-        min_product = min(min_product, (a + i) * (b + j));
-    }
-
-    cout << min_product << endl;
+    cout << min(
+                (a - da) * max(b - (n - da), y),
+                (b - db) * max(a - (n - db), x))
+         << endl;
 
     return 0;
 }
