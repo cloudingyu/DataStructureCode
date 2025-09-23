@@ -1,11 +1,9 @@
 #include <iostream>
 using namespace std;
 
-int n;
+int n, x;
 
-long long a[1000005];
-
-long long b[1000005];
+int a[1000005];
 
 int result;
 
@@ -18,52 +16,22 @@ int main()
     cin >> n;
     for (int i = 1; i <= n; i++)
     {
-        cin >> a[i];
-        b[a[i]] = i;
+        cin >> x;
+        a[x] = i;
     }
 
-    int cube = 1;
-    while (cube * cube * cube < n)
-        cube++;
-    cube++;
-
-    int sqrt = 1;
-    while (sqrt * sqrt < n)
-        sqrt++;
-    sqrt++;
-
-    for (int i = 1; i <= n - 3; i++)
-        if (a[i] < cube)
-        {
-
-            for (int j = n; j >= i + 3; j--)
-                if (a[j] % a[i] == 0)
-                {
-                    for (int k = i + 1; k <= j - 2; k++)
+    for (int p1 = 1; p1 <= 100; p1++)
+        for (int p2 = p1 + 1; p2 <= 1000; p2++)
+            if (a[p2] > a[p1])
+            {
+                for (int p3 = p2 + 1; p3 <= 1000000 / p1 / p2 + 1; p3++)
+                    if (a[p3] > a[p2])
                     {
-                        if (a[i] < a[k] && a[k] < a[j])
-                            if (a[j] % (a[i] * a[k]) == 0)
-                                if (a[j] / a[i] / a[k] > a[k])
-                                    if (b[a[j] / a[i] / a[k]] > k && b[a[j] / a[i] / a[k]] < j)
-                                        result++;
+                        int p4 = p1 * p2 * p3;
+                        if (p4 <= n && a[p4] > a[p3])
+                            result++;
                     }
-                }
-            /*
-            for (int j = i + 1; j <= n-2; j++)
-                if(a[j] < sqrt)
-                    if (a[j] > a[i] )
-                    {
-                        for (int k = j + 1; k <= n-1; k++)
-                            if (a[i] * a[j] * a[k] <= n)
-                                if (a[j] < a[k])
-                                    if (b[a[i] * a[j] * a[k]] > k)
-                                    {
-                                        // cout<<i<<" "<<j<<" "<<k<<endl;
-                                        result++;
-                                    }
-                    }
-            */
-        }
+            }
 
     cout << result << endl;
 
