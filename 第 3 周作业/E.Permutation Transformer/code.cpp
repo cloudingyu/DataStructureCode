@@ -49,12 +49,17 @@ void push_down(int u)
 void push_up(int u)
 {
     size(u) = size(left(u)) + size(right(u)) + 1;
+
+    return ;
 }
 
 void merge(int &u, int root_l, int root_r)
 {
-    if (!root_l || !root_r)
-        return void(u = root_l | root_r);
+    if (!root_l || !root_r){
+        u=root_l | root_r;
+        return ;
+    }
+
     if (pri(root_l) >= pri(root_r))
     {
         u = root_l;
@@ -67,13 +72,20 @@ void merge(int &u, int root_l, int root_r)
         push_down(root_r);
         merge(left(u), root_l, left(root_r));
     }
+
     push_up(u);
+    return ;
 }
 
 void split_size(int u, int &root_l, int &root_r, int cri)
 {
     if (!u)
-        return void(root_l = root_r = 0);
+    {
+        root_l =0;
+        root_r=0;
+        return ;
+    }
+
     push_down(u);
 
     if (size(left(u)) + 1 <= cri)
@@ -81,6 +93,8 @@ void split_size(int u, int &root_l, int &root_r, int cri)
     else
         root_r = u, split_size(left(u), root_l, left(root_r), cri);
     push_up(u);
+
+    return ;
 }
 
 void ins(int val, int id)
