@@ -3,8 +3,8 @@
 #include <ctime>
 using namespace std;
 
-
-int rd(int l, int r) {
+int rd(int l, int r)
+{
     return rand() % (r - l + 1) + l;
 }
 
@@ -39,25 +39,26 @@ void push_down(int u)
         ifRev(right(u)) ^= 1;
 
         swap(left(left(u)), right(left(u)));
-        swap(left(right(u)),right(right(u)));
+        swap(left(right(u)), right(right(u)));
 
         ifRev(u) = 0;
     }
-    return ;
+    return;
 }
 
 void push_up(int u)
 {
     size(u) = size(left(u)) + size(right(u)) + 1;
 
-    return ;
+    return;
 }
 
 void merge(int &u, int root_l, int root_r)
 {
-    if (!root_l || !root_r){
-        u=root_l | root_r;
-        return ;
+    if (!root_l || !root_r)
+    {
+        u = root_l | root_r;
+        return;
     }
 
     if (pri(root_l) >= pri(root_r))
@@ -74,27 +75,27 @@ void merge(int &u, int root_l, int root_r)
     }
 
     push_up(u);
-    return ;
+    return;
 }
 
 void split_size(int u, int &root_l, int &root_r, int cri)
 {
     if (!u)
     {
-        root_l =0;
-        root_r=0;
-        return ;
+        root_l = 0;
+        root_r = 0;
+        return;
     }
 
     push_down(u);
 
     if (size(left(u)) + 1 <= cri)
-        root_l = u, split_size(right(u),right(root_l), root_r, cri - size(left(u)) - 1);
+        root_l = u, split_size(right(u), right(root_l), root_r, cri - size(left(u)) - 1);
     else
         root_r = u, split_size(left(u), root_l, left(root_r), cri);
     push_up(u);
 
-    return ;
+    return;
 }
 
 void ins(int val, int id)
@@ -125,14 +126,14 @@ void print(int u)
 {
     if (!u)
         return;
-    
+
     push_down(u);
 
     print(left(u));
     cout << val(u) << " ";
     print(right(u));
 
-    return ;
+    return;
 }
 
 int main()

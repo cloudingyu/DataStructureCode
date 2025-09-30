@@ -15,7 +15,7 @@ int main()
         t = s.substr(0, len);
 
         Next[0] = -1;
-        for (int i = 0, k = -1; i < n - len - 1; i++)
+        for (int i = 0, k = -1; i < n - len; )
             if (k == -1 || p[k] == p[i])
                 Next[++i] = ++k;
             else
@@ -39,3 +39,6 @@ int main()
 
     return 0;
 }
+
+
+
