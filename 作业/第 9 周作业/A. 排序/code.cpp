@@ -1,8 +1,6 @@
-#include <cstdio>
-const int MAXN = 3e7 + 5;
-
-unsigned int n, ans = 0;
-unsigned int x[MAXN], temp[MAXN];
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 unsigned int xorshift(unsigned int x)
 {
@@ -12,38 +10,53 @@ unsigned int xorshift(unsigned int x)
     return x;
 }
 
-void radixSort(int k)
-{
-    int len = 0;
-    unsigned int bit = 1U << k;
-    for (int i = 1; i <= n; i++)
-        if (!(x[i] & bit))
-            temp[++len] = x[i];
-
-    for (int i = 1; i <= n; i++)
-        if (x[i] & bit)
-            temp[++len] = x[i];
-
-    for (int i = 1; i <= n; i++)
-        x[i] = temp[i];
-
-    return;
-}
-
 int main()
 {
-    scanf("%u%u", &n, x[0]);
+    unsigned int n, x0;
+    scanf("%u %u", &n, &x0);
 
-    for (int i = 1; i <= n; i++)
-        x[i] = xorshift(x[i - 1]);
+    unsigned int *arr = (unsigned int *)malloc(n * sizeof(unsigned int));
+    unsigned int *tmp = (unsigned int *)malloc(n * sizeof(unsigned int));
 
-    for (int i = 0; i < 32; i++)
-        radixSort(i);
+    unsigned int x = x0;
+    for (unsigned int i = 0; i < n; ++i)
+    {
+        x = xorshift(x);
+        arr[i] = x;
+    }
 
-    for (int i = 1; i <= n; i++)
-        ans += x[i] * i;
 
-    printf("%u\n", ans);
+    for (int byte = 0; byte < 4; ++byte)
+    {
+        unsigned int count[256] = {0};
 
+        for (unsigned int i = 0; i < n; ++i)
+        {
+            unsigned int c = (arr[i] >> (byte * 8)) & 0xFF;
+            count[c]++;
+        }
+
+        for (int i = 1; i < 256; ++i)
+            count[i] += count[i - 1];
+
+        for (unsigned int i = n - 1; i < n; --i)
+        {
+            unsigned int c = (arr[i] >> (byte * 8)) & 0xFF;
+            tmp[--count[c]] = arr[i];
+        }
+
+        unsigned int *swap = arr;
+        arr = tmp;
+        tmp = swap;
+    }
+
+    unsigned int sum = 0;
+    for (unsigned int i = 0; i < n; ++i)
+        sum += (i + 1) * arr[i];
+
+    printf("%u\n", sum);
+
+    free(arr);
+    free(tmp);
     return 0;
 }
