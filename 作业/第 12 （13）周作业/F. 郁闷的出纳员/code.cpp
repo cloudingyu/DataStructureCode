@@ -1,50 +1,37 @@
 #include <iostream>
-#include <queue>
-#include <vector>
 #include <algorithm>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+
 using namespace std;
+using namespace __gnu_pbds;
 
-int n, minSalary, delta, leftCnt;
-priority_queue<int, vector<int>, greater<int>> pq;
+typedef pair<int, int> pii;
+typedef tree<pii, null_type, less<pii>, rb_tree_tag, tree_order_statistics_node_update> ordered_set;
 
-void removeLowSalary()
-{
-    while (!pq.empty() && pq.top() + delta < minSalary)
-    {
-        pq.pop();
-        leftCnt++;
-    }
-}
-
-int getKth(int k)
-{
-    if (k > pq.size())
-        return -1;
-
-    priority_queue<int, vector<int>, greater<int>> backup = pq;
-
-    for (int i = 0; i < pq.size() - k; i++)
-        backup.pop();
-
-    return backup.top() + delta;
-}
+int n, min_salary;
+int delta;
+int total_left;
+int id_counter;
+ordered_set tr;
 
 int main()
 {
-    cin >> n >> minSalary;
+    ios::sync_with_stdio(false);
+    cin.tie(0);
 
-    for (int i = 0; i < n; i++)
+    cin >> n >> min_salary;
+
+    char op;
+    int k;
+
+    while (n--)
     {
-        char op;
-        int k;
         cin >> op >> k;
-
         if (op == 'I')
         {
-            if (k >= minSalary)
-            {
-                pq.push(k - delta);
-            }
+            if (k >= min_salary)
+                tr.insert({k - delta, ++id_counter});
         }
         else if (op == 'A')
         {
@@ -53,16 +40,25 @@ int main()
         else if (op == 'S')
         {
             delta -= k;
-            removeLowSalary();
+            int limit_val = min_salary - delta;
+            ordered_set keep;
+            tr.split({limit_val - 1, 2000000000}, keep);
+            total_left += tr.size();
+            tr.swap(keep);
         }
         else if (op == 'F')
         {
-            int result = getKth(k);
-            cout << result << endl;
+            if (k > tr.size())
+                cout << -1 << endl;
+            else
+            {
+                auto it = tr.find_by_order(tr.size() - k);
+                cout << it->first + delta << endl;
+            }
         }
     }
 
-    cout << leftCnt << endl;
+    cout << total_left << endl;
 
     return 0;
 }
