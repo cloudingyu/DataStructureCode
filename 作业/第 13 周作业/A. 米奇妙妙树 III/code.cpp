@@ -87,7 +87,7 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(0);
 
-    if (!(cin >> n >> q)) return 0;
+    cin >> n >> q;
 
     for (int i = 0; i < n - 1; ++i)
     {
